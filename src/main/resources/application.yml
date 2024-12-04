@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: bacao
+  liquibase:
+#    change-log: db/changelog/db.changelog-master.yaml
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bacao
+    username: admin
+    password: root
+
+server:
+  port: 8081
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
