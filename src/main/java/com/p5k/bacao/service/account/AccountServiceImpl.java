@@ -4,19 +4,30 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.p5k.bacao.dto.account.AccountDto;
 import com.p5k.bacao.entity.account.AccountEntity;
 import com.p5k.bacao.mapper.account.AccountMapper;
+import com.p5k.bacao.payload.account.SignUpPayload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountEntity> implements IAccountService {
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AccountDto fetchAccountByUserName(String userName) {
-        AccountDto accountDto = baseMapper.fetchAccountByUserName(userName);
-        return accountDto;
+        return baseMapper.fetchAccountByUserName(userName);
+    }
+
+    @Override
+    public AccountEntity saveAccount(SignUpPayload signUpPayload) {
+        AccountEntity accountEntity = new AccountEntity();
+        accountEntity.setUsername(signUpPayload.getUsername());
+        String encode = passwordEncoder.encode(signUpPayload.getPassword());
+        accountEntity.setPassword(encode);
+        save(accountEntity);
+        return accountEntity;
     }
 }
