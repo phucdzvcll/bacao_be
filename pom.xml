@@ -33,6 +33,7 @@
         <jakarta.validation.version>3.1.0</jakarta.validation.version>
         <io.jsonwebtoken.version>0.12.6</io.jsonwebtoken.version>
         <mapStruct.version>1.5.3.Final</mapStruct.version>
+        <hutool.version>5.8.21</hutool.version>
     </properties>
 
 
@@ -87,6 +88,13 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <!-- hutool -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
         </dependency>
 
         <dependency>

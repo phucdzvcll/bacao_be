@@ -1,6 +1,7 @@
 package com.p5k.bacao.controller;
 
 import com.p5k.bacao.core.base.ResultObject;
+import com.p5k.bacao.core.util.ResponseUtil;
 import com.p5k.bacao.entity.account.AccountEntity;
 import com.p5k.bacao.payload.account.SignUpPayload;
 import com.p5k.bacao.service.account.IAccountService;
@@ -30,7 +31,7 @@ public class AppController {
     @PostMapping("/sign-up")
     public ResultObject<Object> signUp(@RequestBody SignUpPayload accountDto) {
         AccountEntity resource = iAccountService.saveAccount(accountDto);
-        return ResultObject.builder().data(resource).build();
+        return ResponseUtil.success(resource);
 
     }
 

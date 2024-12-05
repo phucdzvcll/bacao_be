@@ -2,16 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.p5k.bacao.mapper.account.AccountMapper">
-    <select id="fetchAccountByUserName" resultType="com.p5k.bacao.dto.account.AccountDto">
+    <select id="fetchAccountByUserName" resultType="com.p5k.bacao.entity.account.AccountEntity">
         select
         ta.id,
         ta.user_name as username,
-        tai.full_name,
-        tai.gender,
-        tai.email,
         ta.use_yn
         from tb_account ta
-        left join tb_account_info tai on ta.id = tai.account_id
         WHERE 1 = 1
         AND ta.user_name = #{userName}
         AND ta.use_yn = 'y'

@@ -18,26 +18,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 public class SecurityConfig {
 
-//    private CustomUserDetailService customUserDetailService;
-
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.cors(AbstractHttpConfigurer::disable);
-//        http.csrf(AbstractHttpConfigurer::disable);
-//        http.authorizeHttpRequests(request -> request
-//                .requestMatchers("/login", "register").permitAll()
-//                .anyRequest().authenticated());
-//        http.httpBasic(Customizer.withDefaults());
-//        http.sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        return http.build();
 
         http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(rq->rq
                 .requestMatchers("/sign-in", "/sign-up").permitAll()
                 .anyRequest().authenticated());
@@ -46,17 +37,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//        provider.setUserDetailsService(customUserDetailService);
-//        provider.setPasswordEncoder(new BCryptPasswordEncoder());
-//        return provider;
-//    }
-//
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-//        return config.getAuthenticationManager();
-//
-//    }
 }

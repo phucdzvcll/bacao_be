@@ -2,13 +2,15 @@ spring:
   application:
     name: bacao
   liquibase:
-#    change-log: db/changelog/db.changelog-master.yaml
     enabled: false
+#    change-log: classpath:db/changelog/db.changelog-master.yaml
   datasource:
-    url: jdbc:postgresql://localhost:5432/bacao_db
-    username: admin
-    password: root
-
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/bacao_db}
+    username: ${JDBC_DATABASE_USERNAME:admin}
+    password: ${JDBC_DATABASE_PASSWORD:root}
+  messages:
+    basename: statics/i18n/messages
+    encoding: UTF-8
 server:
   port: 8082
 
