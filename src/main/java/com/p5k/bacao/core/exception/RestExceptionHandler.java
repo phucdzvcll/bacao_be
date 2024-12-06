@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2023 Smartee Vina. All rights reserved.
- *
- */
-
 package com.p5k.bacao.core.exception;
 
 import com.p5k.bacao.core.base.ResultObject;
 import com.p5k.bacao.core.enums.ServiceCodeEnum;
 import com.p5k.bacao.core.exception.template.IResponseFactory;
 import com.p5k.bacao.core.util.ResponseUtil;
-import com.p5k.bacao.core.xtools.WebUtils;
+import com.p5k.bacao.core.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -34,27 +29,27 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.OK)
-    public ResultObject<String> exception(final HttpServletRequest servletRequest,
-                                          final Exception exception) {
-        int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        String message;
-        if (exception instanceof ServiceException serviceException
-                && null != serviceException.getResponseCodeEnum()) {
-            code = serviceException.getCode();
-            message = WebUtils.getMessage(serviceException.getMessage(), serviceException.getParams());
-        } else {
-            message = exception.getMessage();
-        }
-
+    public ResponseEntity<ResultObject<Object>> exception(final HttpServletRequest servletRequest,
+                                                          final Exception exception) {
+//        int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+//        String message;
+//        if (exception instanceof ServiceException serviceException
+//                && null != serviceException.getResponseCodeEnum()) {
+//            code = serviceException.getCode();
+//            message = WebUtils.getMessage(serviceException.getMessage(), serviceException.getParams());
+//        } else {
+//        }
+        String message = exception.getMessage();
+        ResultObject<Object> dto = responseFactory.produce(exception);
         log.error(message, exception);
-        return ResponseUtil.error(code, message);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @ExceptionHandler({ServiceException.class})
     @ResponseBody
-    public ResponseEntity handleAPIException(final HttpServletRequest servletRequest,
-                                             final ServiceException exception) {
-        ResultObject dto;
+    public ResponseEntity<ResultObject<Object>> handleAPIException(final HttpServletRequest servletRequest,
+                                                                   final ServiceException exception) {
+        ResultObject<Object> dto;
         if (null != exception.getResponseCodeEnum()) {
             String message = WebUtils.getMessage(exception.getResponseCodeEnum().getMessage()
                     , exception.getParams());
@@ -63,7 +58,7 @@ public class RestExceptionHandler {
             dto = responseFactory.produce(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
         }
         log.error(exception.getMessage(), exception);
-        return new ResponseEntity(dto, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -90,16 +85,14 @@ public class RestExceptionHandler {
     public ResultObject<Object> constraintViolationException(final ConstraintViolationException e) {
 
         final List<FieldErrorModel> fieldErrors = new ArrayList<>();
-        for (ConstraintViolation violation : e.getConstraintViolations()) {
+        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
             final FieldErrorModel fieldError = new FieldErrorModel();
             final String errorMessage = violation.getMessage();
             final String fieldName = getErrorFileName(violation, errorMessage);
             fieldError.setViolateField(fieldName);
             try {
                 fieldError.setViolateMsg(WebUtils.getMessage(errorMessage, fieldName));
-            }
-            // NOTE: niennq edit
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 fieldError.setViolateMsg(errorMessage);
             }
             fieldErrors.add(fieldError);

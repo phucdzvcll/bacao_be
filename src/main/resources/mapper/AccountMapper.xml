@@ -6,11 +6,12 @@
         select
         ta.id,
         ta.user_name as username,
-        ta.use_yn
+        ta.use_yn,
+        ta.password
         from tb_account ta
         WHERE 1 = 1
-        AND ta.user_name = #{userName}
-        AND ta.use_yn = 'y'
+        AND ta.user_name = #{username}
+        AND ta.use_yn = 'Y'
         LIMIT 1
     </select>
 </mapper>

@@ -1,15 +1,20 @@
+application:
+  jwt:
+    auth: Smartee-Auth-Service
+    jwt_expiration: 86400000
+    secretKey: 7w9z$C&F)J@NcRfUjXn2r5u8x/A%D*G-KaPdSgVkYp3s6v9y$B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F-JaNdRgUkXn2r5u8x/A?D(G+KbPeShVmYq3s6v9y$B&E)H@McQfTjWnZr4u7w!z%C*F-JaNdRgUkXp2s5v8y/A?D(G+KbPeShVmYq3t6w9z$C&E)H@
 spring:
   application:
     name: bacao
   liquibase:
     enabled: false
-#    change-log: classpath:db/changelog/db.changelog-master.yaml
+  #    change-log: classpath:db/changelog/db.changelog-master.yaml
   datasource:
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/bacao_db}
     username: ${JDBC_DATABASE_USERNAME:admin}
     password: ${JDBC_DATABASE_PASSWORD:root}
   messages:
-    basename: statics/i18n/messages
+    basename: static/messages
     encoding: UTF-8
 server:
   port: 8082

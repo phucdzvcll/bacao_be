@@ -1,5 +1,6 @@
-package com.p5k.bacao.core.xtools;
+package com.p5k.bacao.core.util;
 
+import com.p5k.bacao.core.xtools.XChecker;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.context.MessageSource;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @Component
 public class WebUtils {
@@ -31,7 +33,7 @@ public class WebUtils {
     }
 
     public static HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
     }
 
     public static String getMessage(final String code, final Object... args) {

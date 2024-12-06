@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface AccountMapper extends BaseMapper<AccountEntity> {
-    AccountEntity fetchAccountByUserName(@Param("userName") String userName);
+    AccountEntity fetchAccountByUserName(@Param("username") String userName);
 }

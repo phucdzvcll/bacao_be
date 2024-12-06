@@ -1,5 +1,6 @@
-package com.p5k.bacao;
+package com.p5k.bacao.core.security;
 
+import com.p5k.bacao.service.user.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 public class SecurityConfig {
 
+    private final IUserService userService;
+
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 
@@ -29,12 +32,17 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(rq->rq
+        http.authorizeHttpRequests(rq -> rq
                 .requestMatchers("/sign-in", "/sign-up").permitAll()
                 .anyRequest().authenticated());
         http.httpBasic(Customizer.withDefaults());
-        http.sessionManagement(ss->ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
+    }
+
+    @Bean
+    public AuthProvider authProvider() {
+        return new AuthProvider(userService);
     }
 
 }
