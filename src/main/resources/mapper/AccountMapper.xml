@@ -7,6 +7,7 @@
         ta.id,
         ta.user_name as username,
         ta.use_yn,
+        ta.del_flag as delFlag,
         ta.password
         from tb_account ta
         WHERE 1 = 1

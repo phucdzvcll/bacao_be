@@ -24,7 +24,7 @@ public class RefreshTokenEntity extends BaseEntity {
     @TableField(value = "expiry_date")
     private Instant expiryDate;
 
-    // 1: customer; 2: user administrator
-    @TableField(value = "user_type")
-    private String userType;
+//    // 1: customer; 2: user administrator
+//    @TableField(value = "user_type")
+//    private String userType;
 }

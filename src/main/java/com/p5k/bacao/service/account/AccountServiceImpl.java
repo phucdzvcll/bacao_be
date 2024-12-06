@@ -32,7 +32,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountEntity
             String encode = passwordEncoder.encode(signUpPayload.getPassword());
             accountEntity.setPassword(encode);
             save(accountEntity);
-            return accountEntity;
+            return baseMapper.fetchAccountByUserName(signUpPayload.username);
         } catch (DuplicateKeyException e) {
             throw new ServiceException(ServiceCodeEnum.USER_EXCEPTION_USER_NAME_DUPLICATED);
         }
