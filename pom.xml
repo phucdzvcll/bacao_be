@@ -35,6 +35,8 @@
         <mapStruct.version>1.5.3.Final</mapStruct.version>
         <hutool.version>5.8.21</hutool.version>
         <jwt.version>0.12.6</jwt.version>
+        <redis.version>3.4.0</redis.version>
+        <socket.io.version>2.0.12</socket.io.version>
     </properties>
 
 
@@ -128,6 +130,32 @@
             <version>${jwt.version}</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${redis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${redis.version}</version>
+        </dependency>
+
+        <!-- socket.io-server -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.corundumstudio.socketio</groupId>
+            <artifactId>netty-socketio</artifactId>
+            <version>${socket.io.version}</version>
+        </dependency>
+
+
+        <!-- spring-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
