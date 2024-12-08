@@ -12,11 +12,13 @@ services:
       - "5432:5432"
     restart: unless-stopped
 
+
   redis:
-    image: "redis:7.4.1"
-    container_name: redis-container
+    image: redis/redis-stack-server:6.2.6-v17
+    platform: linux/arm64
+    container_name: redis-stack-server
     ports:
       - "6379:6379"
     volumes:
-      - ./docker_volume/redis:/data
+      - ./docker_volume/redis:/var/lib/redis/data
     restart: always

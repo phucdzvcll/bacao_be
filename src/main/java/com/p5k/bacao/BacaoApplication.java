@@ -1,7 +1,7 @@
 package com.p5k.bacao;
 
 import com.p5k.bacao.http.core.pools.TimeZonePool;
-import com.p5k.bacao.socket.SocketService;
+import com.p5k.bacao.socket.config.SocketService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +20,7 @@ public class BacaoApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         socketService.start();
     }
 

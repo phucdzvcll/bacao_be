@@ -20,6 +20,11 @@ spring:
   socket:
     port: 9092
     host: localhost
+  redis:
+    lettuce:
+      port: 6379
+      host: localhost
+
 server:
   port: 8082
 
