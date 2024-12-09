@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader(JWTConstant.HEADER_STRING);
-        String authToken = null;
+        String authToken;
         if (header != null && header.startsWith(JWTConstant.TOKEN_PREFIX) && SecurityContextHolder.getContext().getAuthentication() == null) {
             authToken = header.replace(JWTConstant.TOKEN_PREFIX, "");
             try {
@@ -58,24 +58,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         try {
             filterChain.doFilter(request, response);
+
         } finally {
             CustomSecurityContextHolder.clear();
         }
     }
+
     private void handleTokenExpired(HttpServletResponse response) throws IOException {
 
-        StringBuilder str = new StringBuilder();
-        str.append("{");
-        str.append("\"status\":").append("{");
-        str.append("\"code\":").append(HttpStatus.FORBIDDEN.value());
-        str.append(",\"success\":").append(Boolean.FALSE);
-        str.append(",\"message\":\"").append(WebUtils.getMessage(
-                ServiceCodeEnum.AUTH_EXCEPTION_TOKEN_CANNOT_CREATE.getMessage())).append("\"");
-        str.append("}");
-        str.append("}");
+        String str = "{" +
+                "\"status\":" + "{" +
+                "\"code\":" + HttpStatus.FORBIDDEN.value() +
+                ",\"success\":" + Boolean.FALSE +
+                ",\"message\":\"" + WebUtils.getMessage(
+                ServiceCodeEnum.AUTH_EXCEPTION_TOKEN_CANNOT_CREATE.getMessage()) +
+                "\"" +
+                "}" +
+                "}";
 
         response.setContentType("application/json;charset=\"UTF-8\"");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write(str.toString());
+        response.getWriter().write(str);
     }
 }

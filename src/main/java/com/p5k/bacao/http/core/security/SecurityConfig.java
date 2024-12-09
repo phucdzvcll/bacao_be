@@ -29,21 +29,22 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(){
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(rq -> rq
-                .requestMatchers("/sign-in", "/sign-up").permitAll()
-                .anyRequest().authenticated());
-        http.httpBasic(Customizer.withDefaults());
-        http.sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults()).
+                authorizeHttpRequests(rq -> rq
+                        .requestMatchers("/sign-in", "/sign-up").permitAll()
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults()).
+                sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
+                addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
