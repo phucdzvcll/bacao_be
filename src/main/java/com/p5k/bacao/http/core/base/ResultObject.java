@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2023 Smartee Vina. All rights reserved.
- *
- */
-
 package com.p5k.bacao.http.core.base;
 
 import com.fasterxml.jackson.annotation.JsonInclude;

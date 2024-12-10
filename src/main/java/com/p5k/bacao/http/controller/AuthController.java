@@ -7,29 +7,31 @@ import com.p5k.bacao.http.core.security.AuthProvider;
 import com.p5k.bacao.http.core.security.jwt.JwtService;
 import com.p5k.bacao.http.core.util.ResponseUtil;
 import com.p5k.bacao.http.entity.account.AccountEntity;
+import com.p5k.bacao.http.module.AccountModule;
 import com.p5k.bacao.http.payload.account.AuthPayload;
-import com.p5k.bacao.http.service.account.IAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
 public class AuthController {
     private final AuthProvider authProvider;
-    //    private final UserService userService;
-    private final IAccountService iAccountService;
+    private final AccountModule accountModule;
 
     private final JwtService jwtService;
 
-    @GetMapping("/")
+    @GetMapping("/test")
     public String greet() {
         return "Hello Wold";
     }
 
-//    @CrossOrigin
+    //    @CrossOrigin
     @PostMapping("/sign-in")
     public ResultObject<Object> login(@RequestBody AuthPayload authPayload) {
         Authentication authentication = authProvider.authenticate(
@@ -48,8 +50,7 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public ResultObject<Object> signUp(@RequestBody AuthPayload authPayload) {
-        AccountEntity resource = iAccountService.saveAccount(authPayload);
-        return ResponseUtil.success(resource);
+        return ResponseUtil.success(accountModule.createAccount(authPayload));
 
     }
 

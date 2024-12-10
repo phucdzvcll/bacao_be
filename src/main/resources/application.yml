@@ -31,3 +31,9 @@ server:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
+
+springdoc:
+  swagger-ui:
+    tryItOutEnabled: true
+    tagsSorter: alpha
+    filter: true

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -20,10 +21,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountEntity
 //    private final Validator validator;
 
 //    @Override
-//    public AccountEntity fetchAccountByUserName(String userName) {
+//    public AccountInfoEntity fetchAccountByUserName(String userName) {
 //        return baseMapper.fetchAccountByUserName(userName);
 //    }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public AccountEntity saveAccount(AuthPayload signUpPayload) {
         try {

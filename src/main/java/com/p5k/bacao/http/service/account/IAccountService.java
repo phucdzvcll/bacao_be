@@ -7,7 +7,7 @@ import com.p5k.bacao.http.payload.account.AuthPayload;
 
 public interface IAccountService extends IService<AccountEntity> {
 
-//    AccountEntity fetchAccountByUserName(String userName);
+//    AccountInfoEntity fetchAccountByUserName(String userName);
 
     AccountEntity saveAccount(AuthPayload authPayload);
 }
