@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuthPayload {
+public class CreateAccountPayload {
 
     public String username;
     public String password;

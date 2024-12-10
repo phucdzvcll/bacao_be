@@ -26,7 +26,7 @@ public class AccountInfoEntity extends BaseEntity {
     private String email;
 
     @TableField(value = "dob")
-    private int dob;
+    private String dob;
 
     @TableField(value = "phone_number")
     private String phoneNumber;

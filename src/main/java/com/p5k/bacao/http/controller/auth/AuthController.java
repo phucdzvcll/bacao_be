@@ -1,4 +1,4 @@
-package com.p5k.bacao.http.controller;
+package com.p5k.bacao.http.controller.auth;
 
 import com.p5k.bacao.http.core.base.ResultObject;
 import com.p5k.bacao.http.core.constants.BaseConstant;
@@ -6,9 +6,10 @@ import com.p5k.bacao.http.core.model.TokenModel;
 import com.p5k.bacao.http.core.security.AuthProvider;
 import com.p5k.bacao.http.core.security.jwt.JwtService;
 import com.p5k.bacao.http.core.util.ResponseUtil;
+import com.p5k.bacao.http.dto.accountInfo.AccountInfoDto;
 import com.p5k.bacao.http.entity.account.AccountEntity;
 import com.p5k.bacao.http.module.AccountModule;
-import com.p5k.bacao.http.payload.account.AuthPayload;
+import com.p5k.bacao.http.payload.account.CreateAccountPayload;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,9 +34,9 @@ public class AuthController {
 
     //    @CrossOrigin
     @PostMapping("/sign-in")
-    public ResultObject<Object> login(@RequestBody AuthPayload authPayload) {
+    public ResultObject<Object> login(@RequestBody CreateAccountPayload createAccountPayload) {
         Authentication authentication = authProvider.authenticate(
-                new UsernamePasswordAuthenticationToken(authPayload.getUsername(), authPayload.getPassword())
+                new UsernamePasswordAuthenticationToken(createAccountPayload.getUsername(), createAccountPayload.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -49,8 +50,8 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public ResultObject<Object> signUp(@RequestBody AuthPayload authPayload) {
-        return ResponseUtil.success(accountModule.createAccount(authPayload));
+    public ResultObject<AccountInfoDto> signUp(@RequestBody CreateAccountPayload createAccountPayload) {
+        return ResponseUtil.success(accountModule.createAccount(createAccountPayload));
 
     }
 

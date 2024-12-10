@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.p5k.bacao.http.mapper.accountInfo.AccountInfoMapper">
+
+    <select id="getAccountInfoByUserId" resultType="com.p5k.bacao.http.dto.accountInfo.AccountInfoDto">
+        SELECT
+            ai.user_id AS userId,
+            a.user_name AS userName,
+            ai.first_login AS firstLogin,
+            ai.display_name AS displayName,
+            ai.email,
+            ai.dob,
+            ai.phone_number AS phoneNumber
+        FROM
+            tb_account_info ai
+                JOIN
+            tb_account a ON ai.user_id = a.id
+        WHERE
+            ai.user_id = #{userId}
+    </select>
+
 </mapper>
