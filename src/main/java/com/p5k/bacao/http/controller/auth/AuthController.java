@@ -47,7 +47,7 @@ public class AuthController {
 
         TokenModel tokenRes =
                 jwtService.createToken(userDetails.getId(), BaseConstant.USER_TYPE_NORMAL);
-        AccountDetailDto accountDetailDto = accountModule.getAccountDetail();
+        AccountDetailDto accountDetailDto = accountModule.getAccountDetail(userDetails.getId());
         Map<String, Object> result = new HashMap<>();
         result.put("token", tokenRes);
         result.put("user", accountDetailDto);

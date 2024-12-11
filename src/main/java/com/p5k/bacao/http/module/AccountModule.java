@@ -138,7 +138,7 @@ public class AccountModule {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AccountDetailDto getAccountDetail() {
-        return accountInfoService.getAccountDetailByUserId(CustomSecurityContextHolder.getUserId());
+    public AccountDetailDto getAccountDetail(String userId) {
+        return accountInfoService.getAccountDetailByUserId(userId);
     }
 }

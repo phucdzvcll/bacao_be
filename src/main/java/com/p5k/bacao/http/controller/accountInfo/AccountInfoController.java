@@ -1,6 +1,7 @@
 package com.p5k.bacao.http.controller.accountInfo;
 
 import com.p5k.bacao.http.core.base.ResultObject;
+import com.p5k.bacao.http.core.security.CustomSecurityContextHolder;
 import com.p5k.bacao.http.core.util.ResponseUtil;
 import com.p5k.bacao.http.dto.accountInfo.AccountDetailDto;
 import com.p5k.bacao.http.module.AccountModule;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("acc/")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AccountInfoController {
 
     private final AccountModule accountModule;
@@ -38,7 +40,7 @@ public class AccountInfoController {
 
     @GetMapping("detail")
     public ResultObject<AccountDetailDto> getUserInfo() {
-        AccountDetailDto accountDetailDto = accountModule.getAccountDetail();
+        AccountDetailDto accountDetailDto = accountModule.getAccountDetail(CustomSecurityContextHolder.getUserId());
         return ResponseUtil.success(accountDetailDto);
     }
 }
