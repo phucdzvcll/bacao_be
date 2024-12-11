@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountInfoDto {
+public class AccountDetailDto {
 
     private String userId;
 
@@ -24,5 +24,7 @@ public class AccountInfoDto {
     private String dob;
 
     private String phoneNumber;
+
+    private String avatar;
 
 }

@@ -1,8 +1,7 @@
 package com.p5k.bacao.http.payload.accountInfo;
 
 import com.p5k.bacao.http.payload.account.UpdatePasswordPayload;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = false)
 @Data

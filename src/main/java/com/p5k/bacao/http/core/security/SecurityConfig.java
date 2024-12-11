@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .headers(header -> header.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*")))
                 .authorizeHttpRequests(rq -> rq
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/sign-in", "/sign-up").permitAll()
+                        .requestMatchers("/sign-in", "/sign-up","/uploads/avatars/*").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults()).
                 sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).

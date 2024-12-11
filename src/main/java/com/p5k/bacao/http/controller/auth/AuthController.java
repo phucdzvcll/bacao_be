@@ -6,7 +6,7 @@ import com.p5k.bacao.http.core.model.TokenModel;
 import com.p5k.bacao.http.core.security.AuthProvider;
 import com.p5k.bacao.http.core.security.jwt.JwtService;
 import com.p5k.bacao.http.core.util.ResponseUtil;
-import com.p5k.bacao.http.dto.accountInfo.AccountInfoDto;
+import com.p5k.bacao.http.dto.accountInfo.AccountDetailDto;
 import com.p5k.bacao.http.entity.account.AccountEntity;
 import com.p5k.bacao.http.module.AccountModule;
 import com.p5k.bacao.http.payload.account.CreateAccountPayload;
@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -44,13 +47,16 @@ public class AuthController {
 
         TokenModel tokenRes =
                 jwtService.createToken(userDetails.getId(), BaseConstant.USER_TYPE_NORMAL);
-
-        return ResponseUtil.success(tokenRes);
+        AccountDetailDto accountDetailDto = accountModule.getAccountDetail();
+        Map<String, Object> result = new HashMap<>();
+        result.put("token", tokenRes);
+        result.put("user", accountDetailDto);
+        return ResponseUtil.success(result);
 
     }
 
     @PostMapping("/sign-up")
-    public ResultObject<AccountInfoDto> signUp(@RequestBody CreateAccountPayload createAccountPayload) {
+    public ResultObject<AccountDetailDto> signUp(@RequestBody CreateAccountPayload createAccountPayload) {
         return ResponseUtil.success(accountModule.createAccount(createAccountPayload));
 
     }

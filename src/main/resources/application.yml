@@ -24,7 +24,10 @@ spring:
     lettuce:
       port: 6379
       host: localhost
-
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
 server:
   port: 8082
 

@@ -31,4 +31,7 @@ public class AccountInfoEntity extends BaseEntity {
     @TableField(value = "phone_number")
     private String phoneNumber;
 
+    @TableField(value = "avatar")
+    private String avatar;
+
 }

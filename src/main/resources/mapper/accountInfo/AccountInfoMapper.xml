@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.p5k.bacao.http.mapper.accountInfo.AccountInfoMapper">
 
-    <select id="getAccountInfoByUserId" resultType="com.p5k.bacao.http.dto.accountInfo.AccountInfoDto">
+    <select id="getAccountInfoByUserId" resultType="com.p5k.bacao.http.dto.accountInfo.AccountDetailDto">
         SELECT
             ai.user_id AS userId,
             a.user_name AS userName,
