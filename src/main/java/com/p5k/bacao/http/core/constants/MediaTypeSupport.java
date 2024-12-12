@@ -4,6 +4,6 @@ import java.util.List;
 
 public class MediaTypeSupport {
 
-    public static final List<String> ALLOWED_FILE_TYPES = List.of("image/jpeg", "image/png");
+    public static final List<String> ALLOWED_FILE_TYPES = List.of("image/jpeg", "image/png", "image/jpg");
 
 }

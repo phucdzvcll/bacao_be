@@ -3,8 +3,10 @@ package com.p5k.bacao.http.controller.accountInfo;
 import com.p5k.bacao.http.core.base.ResultObject;
 import com.p5k.bacao.http.core.security.CustomSecurityContextHolder;
 import com.p5k.bacao.http.core.util.ResponseUtil;
+import com.p5k.bacao.http.core.xtools.XChecker;
 import com.p5k.bacao.http.dto.accountInfo.AccountDetailDto;
 import com.p5k.bacao.http.module.AccountModule;
+import com.p5k.bacao.http.payload.account.UpdatePasswordPayload;
 import com.p5k.bacao.http.payload.accountInfo.UpdateAccountInfoPayload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -19,15 +21,24 @@ public class AccountInfoController {
 
     private final AccountModule accountModule;
 
-    @PatchMapping(value = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResultObject<AccountDetailDto> updateAccountInfo(
+            @RequestParam(value = "oldPassword", required = false) String oldPassword,
+            @RequestParam(value = "newPassword", required = false) String newPassword,
             @RequestParam(value = "displayName", required = false) String displayName,
-            @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "dob", required = false) String dob,
+            @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar
     ) {
         UpdateAccountInfoPayload updateAccountInfoPayload = new UpdateAccountInfoPayload();
+        if(XChecker.isNotEmpty(oldPassword) && XChecker.isNotEmpty(newPassword)) {
+            UpdatePasswordPayload updatePasswordPayload = new UpdatePasswordPayload();
+            updatePasswordPayload.setOldPassword(oldPassword);
+            updatePasswordPayload.setNewPassword(newPassword);
+            updateAccountInfoPayload.setUpdatePasswordPayload(updatePasswordPayload);
+        }
+
         updateAccountInfoPayload.setDisplayName(displayName);
         updateAccountInfoPayload.setEmail(email);
         updateAccountInfoPayload.setDob(dob);
