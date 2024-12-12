@@ -21,7 +21,6 @@ public class AccountInfoController {
 
     @PatchMapping(value = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResultObject<AccountDetailDto> updateAccountInfo(
-            @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "displayName", required = false) String displayName,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "dob", required = false) String dob,
@@ -29,7 +28,6 @@ public class AccountInfoController {
             @RequestParam(value = "avatar", required = false) MultipartFile avatar
     ) {
         UpdateAccountInfoPayload updateAccountInfoPayload = new UpdateAccountInfoPayload();
-        updateAccountInfoPayload.setUserId(userId);
         updateAccountInfoPayload.setDisplayName(displayName);
         updateAccountInfoPayload.setEmail(email);
         updateAccountInfoPayload.setDob(dob);

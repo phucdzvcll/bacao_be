@@ -7,7 +7,6 @@ import lombok.*;
 @Data
 public class UpdateAccountInfoPayload {
     private String displayName;
-    private String userId;
     private String email;
     private String dob;
     private String phoneNumber;
