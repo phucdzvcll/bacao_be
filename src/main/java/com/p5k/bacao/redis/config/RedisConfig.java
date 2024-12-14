@@ -53,4 +53,5 @@ public class RedisConfig {
     public RedisJSON redisJSON(RedisJSONClient redisJSONClient) {
         return redisJSONClient.getRedisJSON();
     }
+
 }

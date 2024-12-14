@@ -1,14 +1,14 @@
 package com.p5k.bacao.socket.config;
 
 import com.corundumstudio.socketio.SocketIOServer;
-import com.p5k.bacao.socket.handlers.room.CreateRoomHandler;
+import com.p5k.bacao.socket.handlers.room.CreateRoomEvent;
+import com.p5k.bacao.socket.handlers.room.JoinToLobbyEvent;
 import com.p5k.bacao.socket.payload.CreateRoomPayload;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.p5k.bacao.socket.handlers.room.CreateRoomHandler.eventName;
 
 @Slf4j
 @Service
@@ -16,7 +16,8 @@ import static com.p5k.bacao.socket.handlers.room.CreateRoomHandler.eventName;
 public class SocketService {
 
     private final SocketIOServer socketIOServer;
-    private final CreateRoomHandler createRoomHandler;
+    private final CreateRoomEvent createRoomEvent;
+    private final JoinToLobbyEvent joinToLobbyEvent;
 
     @PreDestroy
     public void destroy() {
@@ -24,7 +25,13 @@ public class SocketService {
     }
 
     public void start() {
-        socketIOServer.addEventListener(eventName, CreateRoomPayload.class, createRoomHandler);
+        socketIOServer.addEventListener(createRoomEvent.getEventName(),CreateRoomPayload.class, createRoomEvent);
+        socketIOServer.addEventListener(joinToLobbyEvent.getEventName(),Object.class, joinToLobbyEvent);
+
+        socketIOServer.addConnectListener(client ->
+                log.info("Client connected: {}", client.getSessionId())
+        );
+
         socketIOServer.start();
         log.info("Socket.IO server started...");
     }

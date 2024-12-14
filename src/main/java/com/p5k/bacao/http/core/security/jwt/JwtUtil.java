@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -31,10 +28,8 @@ public class JwtUtil {
     private SecretKey key;
 
     @PostConstruct
-    public void init() throws NoSuchAlgorithmException {
-        KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-        SecretKey sk = keyGen.generateKey();
-        String jwtSecret = Base64.getEncoder().encodeToString(sk.getEncoded());
+    public void init() {
+        String jwtSecret = "1eIxOqQ9vb1kPJmho685DNn6dq4FQF6guuTdYMztvqb2KGoiaKmOddg5OV6sp8KZK5irm8yVz2uoEtfeLjdaMA3yknYCevjHcWghcXiijPGCn4Rr41iox6gOqEOFTL3o";
         key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
