@@ -1,4 +1,4 @@
-package com.p5k.bacao.socket.dto;
+package com.p5k.bacao.socket.dto.room;
 
 import lombok.Data;
 
@@ -10,9 +10,11 @@ public class RoomDto {
 
     private String adminId;
 
+    private String adminClientId;
+
     private String password;
 
     private String roomName;
 
-    private List<String> userIds;
+    private List<UserInRoomDto> userIds;
 }

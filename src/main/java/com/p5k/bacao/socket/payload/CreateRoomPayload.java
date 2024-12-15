@@ -11,9 +11,11 @@ public class CreateRoomPayload {
 
     private String adminId;
 
+    private String adminClientId;
+
     private String password;
 
-    private List<String> userIds;
+    private List<UserInRoomPayload> userIds;
 
     private String roomName;
 }

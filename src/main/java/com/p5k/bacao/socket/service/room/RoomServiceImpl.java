@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p5k.bacao.http.core.exception.ServiceException;
 import com.p5k.bacao.http.core.xtools.XChecker;
-import com.p5k.bacao.socket.dto.RoomDto;
+import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.payload.CreateRoomPayload;
+import com.p5k.bacao.socket.payload.UserInRoomPayload;
 import io.github.dengliming.redismodule.redisjson.RedisJSON;
 import io.github.dengliming.redismodule.redisjson.args.GetArgs;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,16 @@ public class RoomServiceImpl extends RoomService {
     }
 
     @Override
-    public RoomDto createRoom(CreateRoomPayload createRoomPayload, String userId) {
+    public RoomDto createRoom(CreateRoomPayload createRoomPayload, String userId, String clientId) {
         String queryPath = "$.[?(@.roomName=='" + createRoomPayload.getRoomName() + "')].roomId";
         Object roomId = redisJSON.get("room", List.class, new GetArgs().path(queryPath));
 
         if (XChecker.isEmpty(roomId)) {
             createRoomPayload.setAdminId(userId);
-            createRoomPayload.setUserIds(List.of(userId));
+            UserInRoomPayload userInRoomPayload = new UserInRoomPayload();
+            userInRoomPayload.setSkSessionId(clientId);
+            userInRoomPayload.setUserId(userId);
+            createRoomPayload.setUserIds(List.of(userInRoomPayload));
             redisJSON.arrAppend("room", ".", createRoomPayload);
             return objectMapper.convertValue(createRoomPayload, RoomDto.class);
         } else {
