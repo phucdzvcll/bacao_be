@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ListenEvent {
 
     CREATE_ROOM("createRoom"),
+    JOIN_TO_ROOM("joinToRoom"),
     JOIN_TO_LOBBY("joinToLobby");
 
     private final String message;

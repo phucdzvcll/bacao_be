@@ -1,4 +1,4 @@
-package com.p5k.bacao.redis.config;
+package com.p5k.bacao.socket.config;
 
 import io.github.dengliming.redismodule.redisjson.RedisJSON;
 import io.github.dengliming.redismodule.redisjson.client.RedisJSONClient;

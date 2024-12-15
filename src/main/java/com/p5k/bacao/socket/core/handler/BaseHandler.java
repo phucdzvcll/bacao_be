@@ -36,7 +36,7 @@ public abstract class BaseHandler<T> implements DataListener<T> {
         return listenEvent.getMessage();
     }
 
-    public abstract void onData(SocketIOClient client, T t, AckRequest ackRequest, String userId) throws Exception;
+    public abstract void onData(SocketIOClient client, T t, AckRequest ackRequest, String userId);
 
 
     private ResultObject<Object> handleAPIException(ServiceException exception) {

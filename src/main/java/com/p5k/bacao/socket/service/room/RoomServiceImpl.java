@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p5k.bacao.http.core.exception.ServiceException;
 import com.p5k.bacao.http.core.xtools.XChecker;
 import com.p5k.bacao.socket.dto.room.RoomDto;
-import com.p5k.bacao.socket.payload.CreateRoomPayload;
-import com.p5k.bacao.socket.payload.UserInRoomPayload;
+import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
+import com.p5k.bacao.socket.payload.room.UserInRoomPayload;
 import io.github.dengliming.redismodule.redisjson.RedisJSON;
 import io.github.dengliming.redismodule.redisjson.args.GetArgs;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +46,28 @@ public class RoomServiceImpl extends RoomService {
         } else {
             throw new ServiceException("Room already exists");
         }
+    }
+
+    @Override
+    public RoomDto findRoomById(String roomId) {
+        String queryPath = "$.[?(@.roomId=='" + roomId + "')]";
+        Object room = redisJSON.get("room", Object.class, new GetArgs().path(queryPath));
+        List<RoomDto> rooms = objectMapper.convertValue(room, new TypeReference<>() {
+        });
+        if (rooms.isEmpty()) {
+            return null;
+        }
+        return rooms.get(0);
+    }
+
+    @Override
+    public RoomDto joinToRoom(String roomId, String userId, String clientId) {
+
+
+        UserInRoomPayload userInRoomPayload = new UserInRoomPayload();
+        userInRoomPayload.setSkSessionId(clientId);
+        userInRoomPayload.setUserId(userId);
+        redisJSON.arrAppendAsync("room", "$.[?(@.roomId=='" + roomId + "')].userIds", userInRoomPayload);
+        return findRoomById(roomId);
     }
 }
