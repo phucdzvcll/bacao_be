@@ -4,6 +4,7 @@ import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
 
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 
 public abstract class RoomService {
     public abstract List<RoomDto> getAllRooms();
@@ -12,5 +13,7 @@ public abstract class RoomService {
 
     public abstract RoomDto findRoomById(String roomId);
 
-    public abstract RoomDto joinToRoom(String roomId, String userId, String clientId);
+    public abstract List<RoomDto> findRoomByUserId(String userId);
+
+    public abstract CompletionStage<Long> joinToRoom(String roomId, String userId, String clientId);
 }

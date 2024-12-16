@@ -2,6 +2,7 @@ package com.p5k.bacao.socket.service.room;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.p5k.bacao.http.core.enums.ServiceCodeEnum;
 import com.p5k.bacao.http.core.exception.ServiceException;
 import com.p5k.bacao.http.core.xtools.XChecker;
 import com.p5k.bacao.socket.dto.room.RoomDto;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class RoomServiceImpl extends RoomService {
             redisJSON.arrAppend("room", ".", createRoomPayload);
             return objectMapper.convertValue(createRoomPayload, RoomDto.class);
         } else {
-            throw new ServiceException("Room already exists");
+            throw new ServiceException(ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_ALREADY_EXITS);
         }
     }
 
@@ -55,19 +57,26 @@ public class RoomServiceImpl extends RoomService {
         List<RoomDto> rooms = objectMapper.convertValue(room, new TypeReference<>() {
         });
         if (rooms.isEmpty()) {
-            return null;
+            throw new ServiceException(ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_NOT_FOUND);
         }
         return rooms.get(0);
     }
 
     @Override
-    public RoomDto joinToRoom(String roomId, String userId, String clientId) {
+    public List<RoomDto> findRoomByUserId(String userId) {
+        return List.of();
+    }
 
-
+    @Override
+    public CompletionStage<Long> joinToRoom(String roomId, String userId, String clientId) {
         UserInRoomPayload userInRoomPayload = new UserInRoomPayload();
         userInRoomPayload.setSkSessionId(clientId);
         userInRoomPayload.setUserId(userId);
-        redisJSON.arrAppendAsync("room", "$.[?(@.roomId=='" + roomId + "')].userIds", userInRoomPayload);
-        return findRoomById(roomId);
+        RoomDto roomDto = findRoomById(roomId);
+        if(roomDto.getUserIds().size() > 17){
+            throw new ServiceException(ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_FULL);
+        }
+
+        return redisJSON.arrAppendAsync("room", "$.[?(@.roomId=='" + roomId + "')].userIds", userInRoomPayload);
     }
 }

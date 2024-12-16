@@ -11,10 +11,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 import static com.p5k.bacao.socket.core.enums.SendEvent.CREATE_ROOM_SUCCESS;
-import static com.p5k.bacao.socket.core.enums.SendEvent.NEW_ROOM_CREATED;
+import static com.p5k.bacao.socket.core.enums.SendEvent.UPDATE_LOBBY;
 
 @Getter
 @Slf4j
@@ -30,14 +28,10 @@ public class CreateRoomEvent extends BaseHandler<CreateRoomPayload> {
 
     @Override
     public void onData(SocketIOClient client, CreateRoomPayload createRoomPayload, AckRequest ackRequest, String userId) {
-
-        Set<String> rooms =  client.getAllRooms();
-
         RoomDto roomDto = roomService.createRoom(createRoomPayload, userId, client.getSessionId().toString());
         client.joinRoom(roomDto.getRoomName());
         client.sendEvent(CREATE_ROOM_SUCCESS.getMessage(), roomDto);
-        client.getNamespace().getBroadcastOperations().sendEvent(NEW_ROOM_CREATED.getMessage(), roomDto);
-        log.info("Rooms: {}", rooms);
+        client.getNamespace().getBroadcastOperations().sendEvent(UPDATE_LOBBY.getMessage(), roomDto);
     }
 
 }

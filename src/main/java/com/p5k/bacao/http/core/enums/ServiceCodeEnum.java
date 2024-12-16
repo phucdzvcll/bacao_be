@@ -44,17 +44,20 @@ public enum ServiceCodeEnum {
     REQUEST_DATA_NOT_FOUND(23030502, "Exception.RequestDataNotFound"),
     DATA_NOT_FOUND(23030503, "Exception.DataNotFound"),
     INTERNAL_SERVER_ERROR(23030504, "Exception.InternalServerError"),
-    EVENT_NOT_FOUND(23030505,"Exception.EventNotFound"),
+    EVENT_NOT_FOUND(23030505, "Exception.EventNotFound"),
 
     // COMMUNICATION ERROR - 06
     COMMUNICATION_PROCESS_FAILED(23030600, "Exception.RequestDataNotFound"),
 
+    //SOCKET - 08
+    SOCKET_EXCEPTION_ROOM_NOT_FOUND(24040801, "SocketException.RoomNotFound"),
+    SOCKET_EXCEPTION_ROOM_ALREADY_EXITS(24040802, "SocketException.RoomAlreadyExits"),
+    SOCKET_EXCEPTION_ROOM_FULL(24040802, "SocketException.RoomWasFull"),
     // COMMON - 07
     CM_EXCEPTION_ID_CANNOT_EMPTY(24020700, "Exception.IdCannotEmpty"),
     CM_EXCEPTION_BAD_ARGUMENT(24020701, "Exception.BadArgument"),
     CM_EXCEPTION_DATA_EMPTY(24020702, "Exception.DataEmpty"),
-    CM_EXCEPTION_NOT_FOUND(24020702, "Exception.DataNotFound")
-    ;
+    CM_EXCEPTION_NOT_FOUND(24020702, "Exception.DataNotFound");
     private final int code;
     private final String message;
 
