@@ -1,6 +1,5 @@
 package com.p5k.bacao.socket.dto.room;
 
-import com.redis.om.spring.annotations.Indexed;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -19,7 +18,6 @@ public class RoomDto {
 
     private String password;
 
-    @Indexed
     private String roomName;
 
     private List<UserInRoomDto> userIds;
