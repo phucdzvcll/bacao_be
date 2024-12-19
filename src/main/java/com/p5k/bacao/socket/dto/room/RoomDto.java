@@ -1,15 +1,11 @@
 package com.p5k.bacao.socket.dto.room;
 
-import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
-@RedisHash("room")
 public class RoomDto {
-    @Id
+
     private String roomId;
 
     private String adminId;

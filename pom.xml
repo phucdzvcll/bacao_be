@@ -144,11 +144,6 @@
             <artifactId>all</artifactId>
             <version>${redis-stack.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>3.4.0</version>
-        </dependency>
         <!-- spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
