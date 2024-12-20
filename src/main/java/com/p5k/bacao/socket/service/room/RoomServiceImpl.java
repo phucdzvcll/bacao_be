@@ -1,17 +1,23 @@
 package com.p5k.bacao.socket.service.room;
 
+import static com.p5k.bacao.socket.core.enums.RedisIndex.ROOM_BY_NAME;
 import com.p5k.bacao.http.core.enums.ServiceCodeEnum;
 import com.p5k.bacao.http.core.xtools.XChecker;
 import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.dto.room.UserInRoomDto;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
+import com.p5k.bacao.socket.payload.room.UserInRoomPayload;
+import com.p5k.bacao.socket.service.RoomDtoCodec;
 import io.github.dengliming.redismodule.redisjson.RedisJSON;
-import io.github.dengliming.redismodule.redisjson.args.GetArgs;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBucket;
+import org.redisson.api.RSearch;
 import org.redisson.api.RedissonClient;
+import org.redisson.api.search.query.QueryOptions;
+import org.redisson.api.search.query.SearchResult;
 import org.redisson.codec.JacksonCodec;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +30,25 @@ public class RoomServiceImpl extends RoomService {
   private final RedisJSON redisJSON;
   private final RedissonClient redisson;
 
+  JacksonCodec<RoomDto> jsonCodec = new JacksonCodec<>(RoomDto.class);
+
   @Override
-  public List<RoomDto> getAllRooms() {
-//        String queryPath = "$.[*]";
-//        return objectMapper.convertValue(
-//                redisJSON.get("room", Object.class, new GetArgs().path(queryPath)),
-//                new TypeReference<>() {
-//                });
-    return List.of();
+  public List<Object> getAllRooms() {
+    RSearch rSearch = redisson.getSearch(new RoomDtoCodec());
+    SearchResult r = rSearch.search(ROOM_BY_NAME.getIndex(), "*", QueryOptions.defaults()
+        .returnAttributes());
+
+    Stream<Object> stream = r.getDocuments().stream().map(
+        document -> document.getAttributes().get("$"));
+    return stream.toList();
+
 
   }
 
   @Override
   public RoomDto createRoom(CreateRoomPayload createRoomPayload, String userId, String clientId) {
 
-    XChecker.isTrueThruMsg(exitByRoomName(createRoomPayload.getRoomName()),
+    XChecker.isTrueThruMsg(XChecker.isNotNull(findRoomName(createRoomPayload.getRoomName())),
         ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_ALREADY_EXITS);
 
     RoomDto roomDto = new RoomDto();
@@ -50,74 +60,39 @@ public class RoomServiceImpl extends RoomService {
     e1.setUserId(userId);
     e1.setSkSessionId(clientId);
     roomDto.setUserIds(List.of(e1));
-    //
-    //    Gson gson = new Gson();
-    //
-    //    redisJSON.set(roomPrefix + createRoomPayload.getRoomName(),
-    //        SetArgs.Builder.create(".", gson.toJson(roomDto)));
+    RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomDto.getRoomId(),
+        jsonCodec);
 
-    RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + createRoomPayload.getRoomName(),
-        new JacksonCodec<>(RoomDto.class));
     buget.set(roomDto);
 
-//        SearchResult searchResult = jedisPooled.ftSearch("idx_rooms", "@roomName:" + createRoomPayload.getRoomName());
-//
-//        if(XChecker.isNotEmpty(searchResult.getDocuments())){
-//            RoomDto roomDto1 = new Gson().fromJson(searchResult.getDocuments().get(0).fe, RoomDto.class);
-//        }
-    return roomDto;
-
-//        String queryPath = "$.[?(@.roomName=='" + createRoomPayload.getRoomName() + "')].roomId";
-//        Object roomId = redisJSON.get("room", List.class, new GetArgs().path(queryPath));
-//
-//        if (XChecker.isEmpty(roomId)) {
-//            createRoomPayload.setAdminId(userId);
-//            UserInRoomPayload userInRoomPayload = new UserInRoomPayload();
-//            userInRoomPayload.setSkSessionId(clientId);
-//            userInRoomPayload.setUserId(userId);
-//            createRoomPayload.setUserIds(List.of(userInRoomPayload));
-//            redisJSON.arrAppend("room", ".", createRoomPayload);
-//            return objectMapper.convertValue(createRoomPayload, RoomDto.class);
-//        } else {
-//            throw new ServiceException(ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_ALREADY_EXITS);
-//        }
+    return buget.get();
   }
 
   @Override
   public RoomDto findRoomById(String roomId) {
-//        String queryPath = "$.[?(@.roomId=='" + roomId + "')]";
-//        Object room = redisJSON.get("room", Object.class, new GetArgs().path(queryPath));
-//        List<RoomDto> rooms = objectMapper.convertValue(room, new TypeReference<>() {
-//        });
-//        if (rooms.isEmpty()) {
-//            throw new ServiceException(ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_NOT_FOUND);
-//        }
-//        return rooms.get(0);
-    return new RoomDto();
+    RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomId,
+        jsonCodec);
+    return buget.get();
   }
 
-  @Override
-  public Boolean exitByRoomName(String roomName) {
-    RoomDto roomDto = redisJSON.get(roomPrefix + roomName, RoomDto.class, new GetArgs());
-    return XChecker.isNotNull(roomDto);
-  }
 
   @Override
-  public List<RoomDto> findRoomByUserId(String userId) {
-    return List.of();
+  public RoomDto findRoomName(String roomName) {
+    RSearch rSearch = redisson.getSearch(new RoomDtoCodec());
+    SearchResult r = rSearch.search(ROOM_BY_NAME.getIndex(), "@roomName:" + roomName,
+        QueryOptions.defaults()
+            .returnAttributes());
+    if (r.getDocuments().isEmpty()) {
+      return null;
+    }
+    return (RoomDto) r.getDocuments().get(0).getAttributes().get("$");
   }
 
   @Override
   public CompletionStage<Long> joinToRoom(String roomId, String userId, String clientId) {
-//        UserInRoomPayload userInRoomPayload = new UserInRoomPayload();
-//        userInRoomPayload.setSkSessionId(clientId);
-//        userInRoomPayload.setUserId(userId);
-//        RoomDto roomDto = findRoomById(roomId);
-//        if (roomDto.getUserIds().size() > 17) {
-//            throw new ServiceException(ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_FULL);
-//        }
-//
-//        return redisJSON.arrAppendAsync("room", "$.[?(@.roomId=='" + roomId + "')].userIds", userInRoomPayload);
-    return null;
+    UserInRoomPayload userInRoomPayload = new UserInRoomPayload();
+    userInRoomPayload.setSkSessionId(clientId);
+    userInRoomPayload.setUserId(userId);
+    return redisJSON.arrAppendAsync(roomPrefix + roomId, "$.userIds", userInRoomPayload);
   }
 }

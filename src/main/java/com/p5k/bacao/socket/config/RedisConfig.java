@@ -25,8 +25,6 @@ public class RedisConfig {
   @Bean
   public Config config() {
     Config config = new Config();
-//    config.setCodec(new JsonJacksonCodec());
-
     config.useSingleServer()
         .setAddress("redis://" + host + ":" + port);
     return config;
@@ -36,7 +34,6 @@ public class RedisConfig {
   public RediSearchClient rediSearchClient(Config config) {
     return new RediSearchClient(config);
   }
-
 
   @Bean
   public RedisJSONClient redisJSONClient(Config config) {

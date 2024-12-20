@@ -11,6 +11,7 @@ public class DisconnectHandler implements DisconnectListener {
 
     @Override
     public void onDisconnect(SocketIOClient socketIOClient) {
+        String userId = socketIOClient.get("userId");
 
     }
 }
