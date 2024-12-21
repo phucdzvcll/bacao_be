@@ -16,4 +16,6 @@ public abstract class RoomService {
     public abstract RoomDto findRoomName(String roomName);
 
     public abstract CompletionStage<Long> joinToRoom(String roomId, String userId, String clientId);
+
+    public abstract RoomDto leaveRoom(String roomId, String userId, String clientId);
 }

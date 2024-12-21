@@ -1,0 +1,8 @@
+FT.CREATE room_idx ON JSON
+PREFIX 1 'room:'
+    SCHEMA $.userName AS userName TEXT
+    $.roomId AS roomId TEXT
+    $.adminId as adminId Text
+    $.adminClientId as adminClientId TEXT
+    $.userIds[*].userId as userId Text
+    $.userIds[*].skSessionId as skSessionId Text

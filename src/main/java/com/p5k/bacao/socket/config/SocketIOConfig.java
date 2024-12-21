@@ -11,6 +11,7 @@ import com.p5k.bacao.http.core.xtools.XChecker;
 import com.p5k.bacao.http.entity.account.AccountEntity;
 import com.p5k.bacao.http.service.account.IAccountService;
 import com.p5k.bacao.socket.handlers.exception.SocketExceptionHandler;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,17 +40,23 @@ public class SocketIOConfig {
         config.setExceptionListener(new SocketExceptionHandler());
         config.setAuthorizationListener((HandshakeData handshakeData) -> {
             String header = handshakeData.getSingleUrlParam(JWTConstant.HEADER_STRING);
-            String userId = handshakeData.getSingleUrlParam(JWTConstant.HEADER_USER_ID);
-            if (XChecker.isNotNull(header) && XChecker.isNotNull(userId) && header.startsWith(JWTConstant.TOKEN_PREFIX)) {
+            if (XChecker.isNotNull(header) && header.startsWith(JWTConstant.TOKEN_PREFIX)) {
                 String authToken = header.replace(JWTConstant.TOKEN_PREFIX, "");
                 try {
                     Boolean isTokenExpired = jwtUtil.isTokenExpired(authToken);
 
-                    boolean isUserExits = accountService.exists(new QueryWrapper<AccountEntity>().lambda().ge(AccountEntity::getId, userId));
-                    Map<String, Object> storeParams = new HashMap<>();
-                    storeParams.put("userId", userId);
+                    if (!isTokenExpired) {
+                        Claims claims = jwtUtil.getClaimsFromToken(authToken);
+                        if (XChecker.isNotNull(claims)) {
 
-                    return new AuthorizationResult(!isTokenExpired && isUserExits, storeParams);
+                            String userId = (String) claims.get("id");
+                            boolean isUserExits = accountService.exists(new QueryWrapper<AccountEntity>().lambda().ge(AccountEntity::getId, userId));
+                            Map<String, Object> storeParams = new HashMap<>();
+                            storeParams.put("userId", userId);
+                            return new AuthorizationResult(isUserExits, storeParams);
+                        }
+                        return new AuthorizationResult(false);
+                    }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                     return new AuthorizationResult(false);

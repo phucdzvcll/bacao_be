@@ -27,8 +27,9 @@ public class JoinToRoomEvent extends BaseHandler<JoinRoomPayload> {
     public void onData(SocketIOClient client, JoinRoomPayload joinRoomPayload, AckRequest ackRequest, String userId) {
         RoomDto roomDto = roomService.findRoomById(joinRoomPayload.getRoomId());
         XChecker.isTrueThruMsg(roomDto == null, "Room not found");
-        roomService.joinToRoom(joinRoomPayload.getRoomId(), userId, client.getSessionId().toString()).thenRunAsync(() -> {
+        roomService.joinToRoom(joinRoomPayload.getRoomId(), userId, client.getSessionId().toString().replace("-", "")).thenRunAsync(() -> {
             RoomDto newRoom = roomService.findRoomById(joinRoomPayload.getRoomId());
+            client.joinRoom(newRoom.getRoomName());
             client.sendEvent(SendEvent.JOIN_TO_ROOM_SUCCESS.getMessage(), newRoom);
             client.getNamespace().getBroadcastOperations().sendEvent(SendEvent.UPDATE_LOBBY.getMessage(), newRoom);
         });

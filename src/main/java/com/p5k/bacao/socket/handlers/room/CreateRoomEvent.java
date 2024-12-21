@@ -7,16 +7,12 @@ import com.p5k.bacao.socket.core.handler.BaseHandler;
 import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
 import com.p5k.bacao.socket.service.room.RoomService;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import static com.p5k.bacao.socket.core.enums.SendEvent.CREATE_ROOM_SUCCESS;
 import static com.p5k.bacao.socket.core.enums.SendEvent.UPDATE_LOBBY;
 
-@Getter
-@Slf4j
-@Component
+@Service
 public class CreateRoomEvent extends BaseHandler<CreateRoomPayload> {
 
     private final RoomService roomService;
@@ -28,7 +24,7 @@ public class CreateRoomEvent extends BaseHandler<CreateRoomPayload> {
 
     @Override
     public void onData(SocketIOClient client, CreateRoomPayload createRoomPayload, AckRequest ackRequest, String userId) {
-        RoomDto roomDto = roomService.createRoom(createRoomPayload, userId, client.getSessionId().toString());
+        RoomDto roomDto = roomService.createRoom(createRoomPayload, userId, client.getSessionId().toString().replace("-", ""));
         client.joinRoom(roomDto.getRoomName());
         client.sendEvent(CREATE_ROOM_SUCCESS.getMessage(), roomDto);
         client.getNamespace().getBroadcastOperations().sendEvent(UPDATE_LOBBY.getMessage(), roomDto);

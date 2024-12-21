@@ -7,7 +7,8 @@ public enum ListenEvent {
 
     CREATE_ROOM("createRoom"),
     JOIN_TO_ROOM("joinToRoom"),
-    JOIN_TO_LOBBY("joinToLobby");
+    JOIN_TO_LOBBY("joinToLobby"),
+    LEAVE_ROOM("leaveRoom");
 
     private final String message;
 

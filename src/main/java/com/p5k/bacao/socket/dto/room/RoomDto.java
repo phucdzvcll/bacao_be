@@ -1,13 +1,14 @@
 package com.p5k.bacao.socket.dto.room;
 
-import cn.hutool.core.lang.UUID;
-import java.util.List;
 import lombok.Data;
+
+import java.util.List;
+import java.util.UUID;
 
 @Data
 public class RoomDto {
 
-  private String roomId = UUID.randomUUID().toString();
+  private String roomId = UUID.randomUUID().toString().replace("-", "");
 
   private String adminId;
 

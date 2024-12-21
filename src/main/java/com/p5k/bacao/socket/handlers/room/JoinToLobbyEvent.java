@@ -6,14 +6,13 @@ import com.p5k.bacao.socket.core.enums.ListenEvent;
 import com.p5k.bacao.socket.core.enums.SendEvent;
 import com.p5k.bacao.socket.core.handler.BaseHandler;
 import com.p5k.bacao.socket.service.room.RoomService;
-import java.util.List;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
-@Component
-@Getter
+@Service
 public class JoinToLobbyEvent extends BaseHandler<Object> {
     private final RoomService roomService;
 
