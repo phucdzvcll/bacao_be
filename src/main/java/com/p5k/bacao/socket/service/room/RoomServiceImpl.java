@@ -1,20 +1,12 @@
 package com.p5k.bacao.socket.service.room;
 
-import static com.p5k.bacao.socket.core.enums.RedisIndex.ROOM_BY_NAME;
-
 import com.p5k.bacao.http.core.enums.ServiceCodeEnum;
 import com.p5k.bacao.http.core.xtools.XChecker;
 import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.dto.room.UserInRoomDto;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
-import com.p5k.bacao.socket.payload.room.UserInRoomPayload;
 import com.p5k.bacao.socket.service.RoomDtoCodec;
 import io.github.dengliming.redismodule.redisjson.RedisJSON;
-
-import java.util.List;
-import java.util.concurrent.CompletionStage;
-import java.util.stream.Stream;
-
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBucket;
 import org.redisson.api.RJsonBucket;
@@ -24,6 +16,12 @@ import org.redisson.api.search.query.QueryOptions;
 import org.redisson.api.search.query.SearchResult;
 import org.redisson.codec.JacksonCodec;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.concurrent.CompletionStage;
+import java.util.stream.Stream;
+
+import static com.p5k.bacao.socket.core.enums.RedisIndex.ROOM_BY_NAME;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +61,7 @@ public class RoomServiceImpl extends RoomService {
         UserInRoomDto e1 = new UserInRoomDto();
         e1.setUserId(userId);
         e1.setSkSessionId(clientId);
+        e1.setSeatNum(0);
         roomDto.setUserIds(List.of(e1));
         RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomDto.getRoomId(),
                 roomDtoCodec);
@@ -76,7 +75,9 @@ public class RoomServiceImpl extends RoomService {
     public RoomDto findRoomById(String roomId) {
         RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomId,
                 roomDtoCodec);
-        return buget.get();
+        RoomDto roomDto = buget.get();
+        XChecker.isNullThruMsg(roomDto, ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_NOT_FOUND);
+        return roomDto;
     }
 
 
@@ -94,10 +95,39 @@ public class RoomServiceImpl extends RoomService {
 
     @Override
     public CompletionStage<Long> joinToRoom(String roomId, String userId, String clientId) {
-        UserInRoomPayload userInRoomPayload = new UserInRoomPayload();
-        userInRoomPayload.setSkSessionId(clientId);
-        userInRoomPayload.setUserId(userId);
-        return redisJSON.arrAppendAsync(roomPrefix + roomId, "$.userIds", userInRoomPayload);
+        UserInRoomDto userInRoom = new UserInRoomDto();
+        userInRoom.setSkSessionId(clientId);
+        userInRoom.setUserId(userId);
+        RoomDto roomDto = findRoomById(roomId);
+
+        Optional<UserInRoomDto> maxSeatUser = roomDto.getUserIds().stream()
+                .max(Comparator.comparingInt(UserInRoomDto::getSeatNum));
+
+        userInRoom.setSeatNum(findSmallestMissingSeatNum(roomDto.getUserIds()));
+        return redisJSON.arrAppendAsync(roomPrefix + roomId, "$.userIds", userInRoom);
+
+    }
+
+    public static int findSmallestMissingSeatNum(List<UserInRoomDto> users) {
+        Set<Integer> existingSeats = new HashSet<>();
+        for (UserInRoomDto user : users) {
+            existingSeats.add(user.getSeatNum());
+        }
+
+        int seatNum = 0;
+        while (existingSeats.contains(seatNum)) {
+            seatNum++;
+        }
+        return seatNum;
+    }
+
+    public static UserInRoomDto findUserBySeat(List<UserInRoomDto> users, int seatNum) {
+        for (UserInRoomDto user : users) {
+            if (user.getSeatNum() == seatNum) {
+                return user;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -109,6 +139,24 @@ public class RoomServiceImpl extends RoomService {
         if (roomDto.getUserIds().isEmpty()) {
             roomDtoRJsonBucket.delete();
         }
+        return roomDto;
+    }
+
+    @Override
+    public RoomDto changeSeatService(String roomId, String userId, int seatNum) {
+        RoomDto roomDto = findRoomById(roomId);
+        UserInRoomDto userInRoomDto = findUserBySeat(roomDto.getUserIds(), seatNum);
+        XChecker.isTrueThruMsg(userInRoomDto != null, "Seat is have an user");
+
+        roomDto.getUserIds().forEach(userInRoomDto1 -> {
+            if (userInRoomDto1.getUserId().equals(userId)) {
+                userInRoomDto1.setSeatNum(seatNum);
+            }
+        });
+
+        RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomId,
+                roomDtoCodec);
+        buget.set(roomDto);
         return roomDto;
     }
 }

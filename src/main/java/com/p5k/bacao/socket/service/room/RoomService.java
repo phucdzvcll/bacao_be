@@ -18,4 +18,6 @@ public abstract class RoomService {
     public abstract CompletionStage<Long> joinToRoom(String roomId, String userId, String clientId);
 
     public abstract RoomDto leaveRoom(String roomId, String userId, String clientId);
+
+    public abstract RoomDto changeSeatService(String roomId, String userId, int seatNum);
 }

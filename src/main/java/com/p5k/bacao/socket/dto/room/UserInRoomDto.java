@@ -6,4 +6,5 @@ import lombok.Data;
 public class UserInRoomDto {
     private String userId;
     private String skSessionId;
+    private int seatNum;
 }

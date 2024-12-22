@@ -9,6 +9,7 @@ public enum SendEvent {
     JOIN_TO_ROOM_SUCCESS("joinToRoomSuccess"),
     UPDATE_LOBBY("updateLobby"),
     CLIENT_LEAVED_ROOM("clientLeavedRoom"),
+    CLIENT_CHANGE_SEAT("clientChangeSeat"),
     JOIN_TO_ROOM_LOBBY_SUCCESS("joinToLobbySuccess"),
 
     //error

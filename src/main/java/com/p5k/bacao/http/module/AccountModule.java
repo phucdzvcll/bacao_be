@@ -35,7 +35,6 @@ public class AccountModule {
     private final IAccountService accountService;
     private final IAccountInfoService accountInfoService;
     private final PasswordEncoder passwordEncoder;
-
     @Transactional(rollbackFor = Exception.class)
     public AccountDetailDto createAccount(CreateAccountPayload createAccountPayload) {
         AccountEntity accountEntity = new AccountEntity();

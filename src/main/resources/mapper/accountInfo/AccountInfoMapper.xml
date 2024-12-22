@@ -18,4 +18,22 @@
         WHERE ai.user_id = #{userId}
     </select>
 
+    <select id="getAccountInfoByUserIds" resultType="com.p5k.bacao.http.dto.accountInfo.AccountDetailDto">
+        SELECT ai.user_id      AS userId,
+               a.user_name     AS userName,
+               ai.first_login  AS firstLogin,
+               ai.display_name AS displayName,
+               ai.email,
+               ai.dob,
+               ai.avatar,
+               ai.phone_number AS phoneNumber
+        FROM tb_account_info ai
+                 JOIN
+             tb_account a ON ai.user_id = a.id
+        WHERE ai.user_id in
+        <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
+
 </mapper>

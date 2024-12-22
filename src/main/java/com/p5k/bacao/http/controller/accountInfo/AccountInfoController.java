@@ -8,10 +8,13 @@ import com.p5k.bacao.http.dto.accountInfo.AccountDetailDto;
 import com.p5k.bacao.http.module.AccountModule;
 import com.p5k.bacao.http.payload.account.UpdatePasswordPayload;
 import com.p5k.bacao.http.payload.accountInfo.UpdateAccountInfoPayload;
+import com.p5k.bacao.http.service.accountInfo.IAccountInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("acc/")
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountInfoController {
 
     private final AccountModule accountModule;
+    private final IAccountInfoService accountInfoService;
 
     @PostMapping(value = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResultObject<AccountDetailDto> updateAccountInfo(
@@ -32,7 +36,7 @@ public class AccountInfoController {
             @RequestParam(value = "avatar", required = false) MultipartFile avatar
     ) {
         UpdateAccountInfoPayload updateAccountInfoPayload = new UpdateAccountInfoPayload();
-        if(XChecker.isNotEmpty(oldPassword) && XChecker.isNotEmpty(newPassword)) {
+        if (XChecker.isNotEmpty(oldPassword) && XChecker.isNotEmpty(newPassword)) {
             UpdatePasswordPayload updatePasswordPayload = new UpdatePasswordPayload();
             updatePasswordPayload.setOldPassword(oldPassword);
             updatePasswordPayload.setNewPassword(newPassword);
@@ -50,6 +54,18 @@ public class AccountInfoController {
     @GetMapping("detail")
     public ResultObject<AccountDetailDto> getUserInfo() {
         AccountDetailDto accountDetailDto = accountModule.getAccountDetail(CustomSecurityContextHolder.getUserId());
+        return ResponseUtil.success(accountDetailDto);
+    }
+
+    @GetMapping("detail/{id}")
+    public ResultObject<AccountDetailDto> getUserInfoById(@PathVariable("id") String id) {
+        AccountDetailDto accountDetailDto = accountModule.getAccountDetail(id);
+        return ResponseUtil.success(accountDetailDto);
+    }
+
+    @PostMapping("details")
+    public ResultObject<List<AccountDetailDto>> getUserInfoById(@RequestBody() List<String> ids) {
+        List<AccountDetailDto> accountDetailDto = accountInfoService.getAccountDetailByUserId(ids);
         return ResponseUtil.success(accountDetailDto);
     }
 }

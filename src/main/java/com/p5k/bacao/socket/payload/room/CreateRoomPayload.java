@@ -1,5 +1,7 @@
 package com.p5k.bacao.socket.payload.room;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -17,5 +19,7 @@ public class CreateRoomPayload {
 
     private List<UserInRoomPayload> userIds;
 
+    @NotNull(message = "Exception.MustNotBeNull")
+    @NotEmpty(message = "Exception.MustNotBeEmpty")
     private String roomName;
 }

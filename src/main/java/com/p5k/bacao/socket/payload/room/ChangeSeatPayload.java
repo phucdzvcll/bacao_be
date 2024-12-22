@@ -5,9 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class UserInRoomPayload {
+public class ChangeSeatPayload {
     @NotNull(message = "Exception.MustNotBeNull")
     @NotEmpty(message = "Exception.MustNotBeEmpty")
-    private String userId;
-    private String skSessionId;
+    private String roomId;
+
+    @NotNull(message = "Exception.MustNotBeNull")
+    @NotEmpty(message = "Exception.MustNotBeEmpty")
+    private int seatNum;
 }
