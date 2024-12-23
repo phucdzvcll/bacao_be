@@ -58,11 +58,7 @@ public class RoomServiceImpl extends RoomService {
         roomDto.setPassword(createRoomPayload.getPassword());
         roomDto.setAdminId(userId);
         roomDto.setAdminClientId(clientId);
-        UserInRoomDto e1 = new UserInRoomDto();
-        e1.setUserId(userId);
-        e1.setSkSessionId(clientId);
-        e1.setSeatNum(0);
-        roomDto.setUserIds(List.of(e1));
+        roomDto.setUserIds(List.of());
         RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomDto.getRoomId(),
                 roomDtoCodec);
 
