@@ -11,6 +11,7 @@ public enum SendEvent {
     CLIENT_LEAVED_ROOM("clientLeavedRoom"),
     CLIENT_CHANGE_SEAT("clientChangeSeat"),
     JOIN_TO_ROOM_LOBBY_SUCCESS("joinToLobbySuccess"),
+    CLIENT_READIED("clientReadied"),
 
     //error
     EX_ERROR("exError");

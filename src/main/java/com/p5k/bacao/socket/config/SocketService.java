@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.p5k.bacao.socket.handlers.room.*;
 import com.p5k.bacao.socket.payload.LeaveRoomPayload;
 import com.p5k.bacao.socket.payload.room.ChangeSeatPayload;
+import com.p5k.bacao.socket.payload.room.ClientReadyPayload;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
 import com.p5k.bacao.socket.payload.room.JoinRoomPayload;
 import jakarta.annotation.PreDestroy;
@@ -24,6 +25,7 @@ public class SocketService {
     private final LeaveRoomHandler leaveRoomHandler;
     private final DisconnectHandler disconnectHandler;
     private final ChangeSeatHandler changeSeatHandler;
+    private final ClientReadyHandler clientReadyHandler;
 
     @PreDestroy
     public void destroy() {
@@ -36,6 +38,7 @@ public class SocketService {
         socketIOServer.addEventListener(joinToRoomEvent.getEventName(), JoinRoomPayload.class, joinToRoomEvent);
         socketIOServer.addEventListener(leaveRoomHandler.getEventName(), LeaveRoomPayload.class, leaveRoomHandler);
         socketIOServer.addEventListener(changeSeatHandler.getEventName(), ChangeSeatPayload.class, changeSeatHandler);
+        socketIOServer.addEventListener(clientReadyHandler.getEventName(), ClientReadyPayload.class, clientReadyHandler);
         socketIOServer.addDisconnectListener(disconnectHandler);
 
         socketIOServer.start();

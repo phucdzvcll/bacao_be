@@ -9,6 +9,7 @@ public enum ListenEvent {
     JOIN_TO_ROOM("joinToRoom"),
     JOIN_TO_LOBBY("joinToLobby"),
     CHANGE_SEAT("changeSeat"),
+    CLIENT_READY("clientReady"),
     LEAVE_ROOM("leaveRoom");
 
     private final String message;

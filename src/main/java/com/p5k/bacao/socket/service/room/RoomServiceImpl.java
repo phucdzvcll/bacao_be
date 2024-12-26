@@ -2,6 +2,8 @@ package com.p5k.bacao.socket.service.room;
 
 import com.p5k.bacao.http.core.enums.ServiceCodeEnum;
 import com.p5k.bacao.http.core.xtools.XChecker;
+import com.p5k.bacao.socket.core.enums.UserStateEnum;
+import com.p5k.bacao.socket.dto.room.ClientReadiedDto;
 import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.dto.room.UserInRoomDto;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
@@ -95,10 +97,6 @@ public class RoomServiceImpl extends RoomService {
         userInRoom.setSkSessionId(clientId);
         userInRoom.setUserId(userId);
         RoomDto roomDto = findRoomById(roomId);
-
-        Optional<UserInRoomDto> maxSeatUser = roomDto.getUserIds().stream()
-                .max(Comparator.comparingInt(UserInRoomDto::getSeatNum));
-
         userInRoom.setSeatNum(findSmallestMissingSeatNum(roomDto.getUserIds()));
         return redisJSON.arrAppendAsync(roomPrefix + roomId, "$.userIds", userInRoom);
 
@@ -154,5 +152,21 @@ public class RoomServiceImpl extends RoomService {
                 roomDtoCodec);
         buget.set(roomDto);
         return roomDto;
+    }
+
+    @Override
+    public ClientReadiedDto clientReady(String roomId, String userId) {
+        RoomDto roomDto = findRoomById(roomId);
+        roomDto.getUserIds().forEach(userInRoomDto1 -> {
+            if (userInRoomDto1.getUserId().equals(userId)) {
+                userInRoomDto1.setUserStateEnum(UserStateEnum.READIED);
+            }
+        });
+        RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomId,
+                roomDtoCodec);
+        buget.set(roomDto);
+        ClientReadiedDto clientReadiedDto = new ClientReadiedDto();
+        clientReadiedDto.setUserId(userId);
+        return clientReadiedDto;
     }
 }
