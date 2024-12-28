@@ -51,9 +51,22 @@ public class WebUtils {
         return messageSource.getMessage(code, args, locale);
     }
 
+    public static String getMessageForSocket(final String code, final Object... args) {
+        Locale locale = null;
+        try {
+            locale = resolveLocale(null);
+        } catch (Exception ignored) {
+        }
+        // Check in case resolveLocale cannot find in LOCALES
+        if (null == locale) {
+            locale = LocaleContextHolder.getLocale();
+        }
+        return messageSource.getMessage(code, args, locale);
+    }
+
     public static Locale resolveLocale(String headerLang) {
         if (XChecker.isEmpty(headerLang)) {
-            return Locale.getDefault();
+            return new Locale("vi");
         }
         List<Locale.LanguageRange> list = Locale.LanguageRange.parse(headerLang);
         return Locale.lookup(list, LOCALES);

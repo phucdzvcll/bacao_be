@@ -15,9 +15,8 @@ import com.p5k.bacao.socket.core.payload.BasePayload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.validation.annotation.Validated;
 
 @Slf4j
 public abstract class BaseHandler<T extends BasePayload> implements DataListener<T> {
@@ -41,7 +40,7 @@ public abstract class BaseHandler<T extends BasePayload> implements DataListener
             long startTime = System.currentTimeMillis();
             onData(socketIOClient, t, ackRequest, userId, broadcastOperations);
             long endTime = System.currentTimeMillis();
-            log.info("Spent duration: {}ms", endTime - startTime);
+            log.info("Task duration: {}ms", endTime - startTime);
 
         } catch (ServiceException e) {
             socketIOClient.sendEvent(SendEvent.EX_ERROR.getMessage(), handleAPIException(e));
@@ -52,13 +51,13 @@ public abstract class BaseHandler<T extends BasePayload> implements DataListener
     }
 
     public void onValidPayload(T t, Validator validator) {
-        var bindingResult = new BeanPropertyBindingResult(t, t.getClass().toString());
-        validator.validate(t, bindingResult);
 
-        if (bindingResult.hasErrors()) {
+        Errors errors = validator.validateObject(t);
+
+        if (errors.hasErrors()) {
             throw new ServiceException(
-                    bindingResult.getFieldErrors().stream()
-                            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    errors.getFieldErrors().stream()
+                            .map(error -> WebUtils.getMessageForSocket(error.getDefaultMessage(), error.getField()))
                             .reduce((msg1, msg2) -> msg1 + ", " + msg2)
                             .orElse("Validation failed")
             );
@@ -69,12 +68,12 @@ public abstract class BaseHandler<T extends BasePayload> implements DataListener
         return listenEvent.getMessage();
     }
 
-    public abstract void onData(@Validated SocketIOClient client, T t, AckRequest ackRequest, String userId, BroadcastOperations roomBroadcast);
+    public abstract void onData( SocketIOClient client, T t, AckRequest ackRequest, String userId, BroadcastOperations roomBroadcast);
 
 
     private ResultObject<Object> handleAPIException(ServiceException exception) {
         if (null != exception.getResponseCodeEnum()) {
-            String message = WebUtils.getMessage(exception.getResponseCodeEnum().getMessage()
+            String message = WebUtils.getMessageForSocket(exception.getResponseCodeEnum().getMessage()
                     , exception.getParams());
             return responseFactory.produce(exception.getResponseCodeEnum().getCode(), message);
         } else {
