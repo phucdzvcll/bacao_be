@@ -7,6 +7,7 @@ public enum SendEvent {
 
     CREATE_ROOM_SUCCESS("createRoomSuccess"),
     JOIN_TO_ROOM_SUCCESS("joinToRoomSuccess"),
+    NEW_CLIENT_JOIN_TO_ROOM("newClientJoinToRoom"),
     UPDATE_LOBBY("updateLobby"),
     CLIENT_LEAVED_ROOM("clientLeavedRoom"),
     CLIENT_CHANGE_SEAT("clientChangeSeat"),

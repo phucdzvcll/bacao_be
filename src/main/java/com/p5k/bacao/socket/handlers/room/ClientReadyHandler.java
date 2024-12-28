@@ -1,6 +1,7 @@
 package com.p5k.bacao.socket.handlers.room;
 
 import com.corundumstudio.socketio.AckRequest;
+import com.corundumstudio.socketio.BroadcastOperations;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.p5k.bacao.socket.core.enums.ListenEvent;
 import com.p5k.bacao.socket.core.handler.BaseHandler;
@@ -21,8 +22,8 @@ public class ClientReadyHandler extends BaseHandler<ClientReadyPayload> {
     final RoomService roomService;
 
     @Override
-    public void onData(SocketIOClient client, ClientReadyPayload clientReadyPayload, AckRequest ackRequest, String userId) {
+    public void onData(SocketIOClient client, ClientReadyPayload clientReadyPayload, AckRequest ackRequest, String userId, BroadcastOperations roomBroadcast) {
         ClientReadiedDto clientReadiedDto = roomService.clientReady(clientReadyPayload.getRoomId(), userId);
-        client.getNamespace().getRoomOperations(clientReadyPayload.getRoomName()).sendEvent(CLIENT_READIED.getMessage(), clientReadiedDto);
+        roomBroadcast.sendEvent(CLIENT_READIED.getMessage(), clientReadiedDto);
     }
 }

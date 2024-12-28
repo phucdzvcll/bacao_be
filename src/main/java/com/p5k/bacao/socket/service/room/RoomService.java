@@ -20,7 +20,7 @@ public abstract class RoomService {
 
     public abstract RoomDto leaveRoom(String roomId, String userId, String clientId);
 
-    public abstract RoomDto changeSeatService(String roomId, String userId, int seatNum);
+    public abstract void changeSeatService(String roomId, String userId, int seatNum);
 
     public abstract ClientReadiedDto clientReady(String roomId, String userId);
 }

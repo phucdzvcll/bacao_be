@@ -1,8 +1,9 @@
 package com.p5k.bacao.socket.config;
 
 import com.corundumstudio.socketio.SocketIOServer;
+import com.p5k.bacao.socket.core.enums.ListenEvent;
 import com.p5k.bacao.socket.handlers.room.*;
-import com.p5k.bacao.socket.payload.LeaveRoomPayload;
+import com.p5k.bacao.socket.payload.room.LeaveRoomPayload;
 import com.p5k.bacao.socket.payload.room.ChangeSeatPayload;
 import com.p5k.bacao.socket.payload.room.ClientReadyPayload;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
@@ -34,7 +35,7 @@ public class SocketService {
 
     public void start() {
         socketIOServer.addEventListener(createRoomEvent.getEventName(), CreateRoomPayload.class, createRoomEvent);
-        socketIOServer.addEventListener(joinToLobbyEvent.getEventName(), Object.class, joinToLobbyEvent);
+        socketIOServer.addEventListener(ListenEvent.JOIN_TO_LOBBY.getMessage(), Object.class, joinToLobbyEvent);
         socketIOServer.addEventListener(joinToRoomEvent.getEventName(), JoinRoomPayload.class, joinToRoomEvent);
         socketIOServer.addEventListener(leaveRoomHandler.getEventName(), LeaveRoomPayload.class, leaveRoomHandler);
         socketIOServer.addEventListener(changeSeatHandler.getEventName(), ChangeSeatPayload.class, changeSeatHandler);

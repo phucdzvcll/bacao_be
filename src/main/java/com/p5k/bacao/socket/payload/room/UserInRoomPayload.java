@@ -9,5 +9,6 @@ public class UserInRoomPayload {
     @NotNull(message = "Exception.MustNotBeNull")
     @NotEmpty(message = "Exception.MustNotBeEmpty")
     private String userId;
+
     private String skSessionId;
 }

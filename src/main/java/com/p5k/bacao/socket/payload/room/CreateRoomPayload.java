@@ -1,15 +1,14 @@
 package com.p5k.bacao.socket.payload.room;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.p5k.bacao.socket.core.payload.BasePayload;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
-import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
-public class CreateRoomPayload {
-    private String roomId = UUID.randomUUID().toString();
+public class CreateRoomPayload extends BasePayload {
 
     private String adminId;
 
@@ -19,7 +18,5 @@ public class CreateRoomPayload {
 
     private List<UserInRoomPayload> userIds;
 
-    @NotNull(message = "Exception.MustNotBeNull")
-    @NotEmpty(message = "Exception.MustNotBeEmpty")
-    private String roomName;
+
 }

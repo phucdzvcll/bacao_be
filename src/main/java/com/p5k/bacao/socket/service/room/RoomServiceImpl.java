@@ -137,7 +137,7 @@ public class RoomServiceImpl extends RoomService {
     }
 
     @Override
-    public RoomDto changeSeatService(String roomId, String userId, int seatNum) {
+    public void changeSeatService(String roomId, String userId, int seatNum) {
         RoomDto roomDto = findRoomById(roomId);
         UserInRoomDto userInRoomDto = findUserBySeat(roomDto.getUserIds(), seatNum);
         XChecker.isTrueThruMsg(userInRoomDto != null, "Seat is have an user");
@@ -151,7 +151,6 @@ public class RoomServiceImpl extends RoomService {
         RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomId,
                 roomDtoCodec);
         buget.set(roomDto);
-        return roomDto;
     }
 
     @Override
