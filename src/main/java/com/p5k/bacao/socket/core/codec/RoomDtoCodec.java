@@ -1,4 +1,4 @@
-package com.p5k.bacao.socket.service;
+package com.p5k.bacao.socket.core.codec;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p5k.bacao.socket.dto.room.RoomDto;

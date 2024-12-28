@@ -3,11 +3,10 @@ package com.p5k.bacao.socket.service.room;
 import com.p5k.bacao.http.core.enums.ServiceCodeEnum;
 import com.p5k.bacao.http.core.xtools.XChecker;
 import com.p5k.bacao.socket.core.enums.UserStateEnum;
-import com.p5k.bacao.socket.dto.room.ClientReadiedDto;
 import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.dto.room.UserInRoomDto;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
-import com.p5k.bacao.socket.service.RoomDtoCodec;
+import com.p5k.bacao.socket.core.codec.RoomDtoCodec;
 import io.github.dengliming.redismodule.redisjson.RedisJSON;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBucket;
@@ -154,7 +153,7 @@ public class RoomServiceImpl extends RoomService {
     }
 
     @Override
-    public ClientReadiedDto clientReady(String roomId, String userId) {
+    public RoomDto clientReady(String roomId, String userId) {
         RoomDto roomDto = findRoomById(roomId);
         roomDto.getUserIds().forEach(userInRoomDto1 -> {
             if (userInRoomDto1.getUserId().equals(userId)) {
@@ -164,8 +163,6 @@ public class RoomServiceImpl extends RoomService {
         RBucket<RoomDto> buget = redisson.getJsonBucket(roomPrefix + roomId,
                 roomDtoCodec);
         buget.set(roomDto);
-        ClientReadiedDto clientReadiedDto = new ClientReadiedDto();
-        clientReadiedDto.setUserId(userId);
-        return clientReadiedDto;
+        return buget.get();
     }
 }

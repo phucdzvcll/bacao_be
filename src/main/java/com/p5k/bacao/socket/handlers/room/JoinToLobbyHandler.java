@@ -12,10 +12,10 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class JoinToLobbyEvent implements DataListener<Object> {
+public class JoinToLobbyHandler implements DataListener<Object> {
     private final RoomService roomService;
 
-    protected JoinToLobbyEvent(RoomService roomService) {
+    protected JoinToLobbyHandler(RoomService roomService) {
 
         this.roomService = roomService;
     }

@@ -1,6 +1,5 @@
 package com.p5k.bacao.socket.service.room;
 
-import com.p5k.bacao.socket.dto.room.ClientReadiedDto;
 import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.payload.room.CreateRoomPayload;
 
@@ -22,5 +21,5 @@ public abstract class RoomService {
 
     public abstract void changeSeatService(String roomId, String userId, int seatNum);
 
-    public abstract ClientReadiedDto clientReady(String roomId, String userId);
+    public abstract RoomDto clientReady(String roomId, String userId);
 }

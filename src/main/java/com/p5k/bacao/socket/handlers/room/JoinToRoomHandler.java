@@ -16,11 +16,11 @@ import org.springframework.validation.annotation.Validated;
 import static com.p5k.bacao.socket.core.enums.ListenEvent.JOIN_TO_ROOM;
 
 @Service
-public class JoinToRoomEvent extends BaseHandler<JoinRoomPayload> {
+public class JoinToRoomHandler extends BaseHandler<JoinRoomPayload> {
 
     private final RoomService roomService;
 
-    protected JoinToRoomEvent(RoomService roomService) {
+    protected JoinToRoomHandler(RoomService roomService) {
         super(JOIN_TO_ROOM);
         this.roomService = roomService;
     }

@@ -17,18 +17,18 @@ import static com.p5k.bacao.socket.core.enums.SendEvent.CREATE_ROOM_SUCCESS;
 import static com.p5k.bacao.socket.core.enums.SendEvent.UPDATE_LOBBY;
 
 @Service
-public class CreateRoomEvent extends BaseHandler<CreateRoomPayload> {
+public class CreateRoomHandler extends BaseHandler<CreateRoomPayload> {
 
     private final RoomService roomService;
 
-    protected CreateRoomEvent(RoomService roomService) {
+    protected CreateRoomHandler(RoomService roomService) {
         super(ListenEvent.CREATE_ROOM);
         this.roomService = roomService;
     }
 
     @Override
     public void onValidPayload(CreateRoomPayload createRoomPayload, Validator validator) {
-        createRoomPayload.setRoomId(UUID.randomUUID().toString());
+        createRoomPayload.setRoomId(UUID.randomUUID().toString().replaceAll("-", ""));
         super.onValidPayload(createRoomPayload, validator);
     }
 
@@ -38,6 +38,7 @@ public class CreateRoomEvent extends BaseHandler<CreateRoomPayload> {
         client.joinRoom(roomDto.getRoomName());
         client.sendEvent(CREATE_ROOM_SUCCESS.getMessage(), roomDto);
         client.getNamespace().getBroadcastOperations().sendEvent(UPDATE_LOBBY.getMessage(), roomDto);
+        
     }
 
 }

@@ -20,9 +20,9 @@ import org.springframework.stereotype.Service;
 public class SocketService {
 
     private final SocketIOServer socketIOServer;
-    private final CreateRoomEvent createRoomEvent;
-    private final JoinToLobbyEvent joinToLobbyEvent;
-    private final JoinToRoomEvent joinToRoomEvent;
+    private final CreateRoomHandler createRoomHandler;
+    private final JoinToLobbyHandler joinToLobbyHandler;
+    private final JoinToRoomHandler joinToRoomHandler;
     private final LeaveRoomHandler leaveRoomHandler;
     private final DisconnectHandler disconnectHandler;
     private final ChangeSeatHandler changeSeatHandler;
@@ -34,9 +34,9 @@ public class SocketService {
     }
 
     public void start() {
-        socketIOServer.addEventListener(createRoomEvent.getEventName(), CreateRoomPayload.class, createRoomEvent);
-        socketIOServer.addEventListener(ListenEvent.JOIN_TO_LOBBY.getMessage(), Object.class, joinToLobbyEvent);
-        socketIOServer.addEventListener(joinToRoomEvent.getEventName(), JoinRoomPayload.class, joinToRoomEvent);
+        socketIOServer.addEventListener(createRoomHandler.getEventName(), CreateRoomPayload.class, createRoomHandler);
+        socketIOServer.addEventListener(ListenEvent.JOIN_TO_LOBBY.getMessage(), Object.class, joinToLobbyHandler);
+        socketIOServer.addEventListener(joinToRoomHandler.getEventName(), JoinRoomPayload.class, joinToRoomHandler);
         socketIOServer.addEventListener(leaveRoomHandler.getEventName(), LeaveRoomPayload.class, leaveRoomHandler);
         socketIOServer.addEventListener(changeSeatHandler.getEventName(), ChangeSeatPayload.class, changeSeatHandler);
         socketIOServer.addEventListener(clientReadyHandler.getEventName(), ClientReadyPayload.class, clientReadyHandler);
