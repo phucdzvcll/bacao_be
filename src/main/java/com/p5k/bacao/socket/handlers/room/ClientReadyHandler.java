@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.p5k.bacao.socket.core.enums.SendEvent.CLIENT_READIED;
+import static com.p5k.bacao.socket.core.enums.SendEvent.NEW_GAME;
 
 @Service
 public class ClientReadyHandler extends BaseHandler<ClientReadyPayload> {
@@ -31,7 +32,6 @@ public class ClientReadyHandler extends BaseHandler<ClientReadyPayload> {
     final RoomService roomService;
     final MatchService matchService;
 
-
     @Override
     public void onData(SocketIOClient client, ClientReadyPayload clientReadyPayload, AckRequest ackRequest, String userId, BroadcastOperations roomBroadcast) {
         RoomDto roomDto = roomService.clientReady(clientReadyPayload.getRoomId(), userId);
@@ -41,8 +41,11 @@ public class ClientReadyHandler extends BaseHandler<ClientReadyPayload> {
 
         List<UserInRoomDto> usersNotReadied = roomDto.getUserIds().stream().filter(id -> id.getUserStateEnum() != UserStateEnum.READIED).toList();
 
-        if (XChecker.isEmpty(usersNotReadied) && roomDto.getUserIds().size() > 1) {
+        if (XChecker.isEmpty(usersNotReadied)
+                && roomDto.getUserIds().size() > 1
+        ) {
             MatchDto matchDto = matchService.createMatch(roomDto);
+            roomBroadcast.sendEvent(NEW_GAME.getMessage(), matchDto);
         }
     }
 

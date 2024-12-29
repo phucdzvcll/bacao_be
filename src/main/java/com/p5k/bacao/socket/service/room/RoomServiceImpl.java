@@ -2,6 +2,7 @@ package com.p5k.bacao.socket.service.room;
 
 import com.p5k.bacao.http.core.enums.ServiceCodeEnum;
 import com.p5k.bacao.http.core.xtools.XChecker;
+import com.p5k.bacao.socket.core.enums.RoomStatus;
 import com.p5k.bacao.socket.core.enums.UserStateEnum;
 import com.p5k.bacao.socket.dto.room.RoomDto;
 import com.p5k.bacao.socket.dto.room.UserInRoomDto;
@@ -55,6 +56,7 @@ public class RoomServiceImpl extends RoomService {
                 ServiceCodeEnum.SOCKET_EXCEPTION_ROOM_ALREADY_EXITS);
 
         RoomDto roomDto = new RoomDto();
+        roomDto.setRoomStatus(RoomStatus.WAITING);
         roomDto.setRoomName(createRoomPayload.getRoomName());
         roomDto.setPassword(createRoomPayload.getPassword());
         roomDto.setAdminId(userId);

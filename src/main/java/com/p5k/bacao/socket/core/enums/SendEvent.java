@@ -13,6 +13,7 @@ public enum SendEvent {
     CLIENT_CHANGE_SEAT("clientChangeSeat"),
     JOIN_TO_ROOM_LOBBY_SUCCESS("joinToLobbySuccess"),
     CLIENT_READIED("clientReadied"),
+    NEW_GAME("newGame"),
 
     //error
     EX_ERROR("exError");

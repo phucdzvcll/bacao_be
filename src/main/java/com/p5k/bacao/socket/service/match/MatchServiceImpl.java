@@ -1,5 +1,7 @@
 package com.p5k.bacao.socket.service.match;
 
+import com.p5k.bacao.socket.core.enums.RoomStatus;
+import com.p5k.bacao.socket.core.enums.UserStateEnum;
 import com.p5k.bacao.socket.core.enums.card.Card;
 import com.p5k.bacao.socket.dto.match.MatchDto;
 import com.p5k.bacao.socket.dto.match.UserCardDto;
@@ -67,10 +69,17 @@ public class MatchServiceImpl implements MatchService {
         }
         matchDto.setWinner(winner);
         JacksonCodec<MatchDto> matchDtoCodec = new JacksonCodec<>(MatchDto.class);
-        RBucket<MatchDto> buget = redissonClient.getJsonBucket(maxPrefix + matchDto.getMatchId(),
+        JacksonCodec<RoomDto> roomDtoCodec = new JacksonCodec<>(RoomDto.class);
+        RBucket<MatchDto> matchBucket = redissonClient.getJsonBucket(maxPrefix + matchDto.getMatchId(),
                 matchDtoCodec);
-        buget.set(matchDto);
-        return buget.get();
+
+        RBucket<RoomDto> roomBucket = redissonClient.getJsonBucket("room:" + roomDto.getRoomId(),
+                roomDtoCodec);
+        matchBucket.set(matchDto);
+        roomDto.setRoomStatus(RoomStatus.RUNNING);
+        roomDto.getUserIds().forEach(userInRoomDto -> userInRoomDto.setUserStateEnum(UserStateEnum.PLAYING));
+        roomBucket.set(roomDto);
+        return matchBucket.get();
     }
 
     public List<Card> initDeck() {
