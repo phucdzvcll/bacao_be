@@ -10,6 +10,8 @@ public enum ListenEvent {
     JOIN_TO_LOBBY("joinToLobby"),
     CHANGE_SEAT("changeSeat"),
     CLIENT_READY("clientReady"),
+    CLIENT_FLIP_CARD("clientFlipCard"),
+    CLIENT_FLIP_ALL_CARD("clientFlipAllCard"),
     LEAVE_ROOM("leaveRoom");
 
     private final String message;

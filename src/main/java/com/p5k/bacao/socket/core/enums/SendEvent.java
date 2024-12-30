@@ -13,6 +13,8 @@ public enum SendEvent {
     CLIENT_CHANGE_SEAT("clientChangeSeat"),
     JOIN_TO_ROOM_LOBBY_SUCCESS("joinToLobbySuccess"),
     CLIENT_READIED("clientReadied"),
+    CLIENT_FLIP_CARD("clientFlipCard"),
+    CLIENT_FLIP_ALL_CARD("clientFlipAllCard"),
     NEW_GAME("newGame"),
 
     //error

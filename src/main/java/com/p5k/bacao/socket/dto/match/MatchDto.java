@@ -12,7 +12,7 @@ public class MatchDto {
 
     private String matchId;
 
-    private String winner;
+    private UserCardDto winner;
 
     private List<UserCardDto> userCardDtoList;
 
